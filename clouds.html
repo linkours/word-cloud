@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="js/jquery.min.js"></script>
+        <script src='js/echarts.simple.js'></script>
+        <script src='js/echarts-wordcloud.js'></script>
+    </head>
+    <body>
+        <style>
+            html, body, #main {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+        </style>
+        <div id='main'></div>
+        <script>
+            var chart = echarts.init(document.getElementById('main'));
+			var imgURL = "cir.png";
+            var data = [];
+			$.getJSON("test.json",function(result){
+				for (var i=0;i<result.length;i++) {
+					data.push({
+						name:result[i].name,
+						value:result[i].value,
+					})
+			    }
+				var circle = new Image();
+            	circle.src = imgURL;
+				var option = {
+	                series: [ {
+	                    type: 'wordCloud',
+	                    sizeRange: [15, 100],
+	                    rotationRange: [-90, 90],
+	                    gridSize: 1,
+	                    shape: 'circle',
+	                    circle: circle,
+	                    width: 600,
+	            		height: 600,
+	                    textStyle: {
+	                        normal: {
+	                            color: function () {
+	                                return 'rgb(' + [
+	                                    Math.round(Math.random() * 160),
+	                                    Math.round(Math.random() * 160),
+	                                    Math.round(Math.random() * 160)
+	                                ].join(',') + ')';
+	                            }
+	                        }
+	                    },
+	                    data: data
+	                } ]
+	            };
+	            circle.onload = function () {
+	                option.series[0].circle;
+	                chart.setOption(option);
+	            }
+			})
+        </script>
+    </body>
+</html>
